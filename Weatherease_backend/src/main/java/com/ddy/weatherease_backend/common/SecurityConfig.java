@@ -13,6 +13,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+/**
+ * Spring Security 配置
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -29,10 +32,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/users/register", "/api/users/login").permitAll()  // 公开接口
-                .antMatchers("/api/admin/**").hasRole("ADMIN")  // 只有 ADMIN 角色的用户可访问
-                .antMatchers("/api/users/**").hasRole("USER")  // 普通用户可访问
-                .anyRequest().authenticated()  // 其他请求都需要认证
+                .antMatchers("/users/register", "/users/login","/weather/**").permitAll()  //公开接口
+                .antMatchers("/admin/**").hasRole("ADMIN")  //只有ADMIN角色的用户可访问
+                .antMatchers("/users/**").hasRole("USER")  //普通用户可访问
+                //.antMatchers("/weather/**").hasAnyRole("USER", "ADMIN")
+                .anyRequest().authenticated()  //其他请求都需要认证
                 .and()
                 .addFilterBefore(new JwtAuthenticationFilter(jwtUtil), UsernamePasswordAuthenticationFilter.class)  // 添加 JWT 认证过滤器
                 .formLogin().disable();  // 禁用表单登录

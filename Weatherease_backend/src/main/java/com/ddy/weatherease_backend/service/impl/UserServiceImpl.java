@@ -5,10 +5,12 @@ import com.ddy.weatherease_backend.dto.UserDTO;
 import com.ddy.weatherease_backend.entity.User;
 import com.ddy.weatherease_backend.mapper.UserMapper;
 import com.ddy.weatherease_backend.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -47,9 +49,12 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.selectOne(queryWrapper);  // 使用 QueryWrapper 查找用户
         //比较明文密码和加密后的密码是否匹配
         if (user != null && passwordEncoder.matches(userDTO.getPassword(), user.getPassword())) {
+            log.info("User authenticated successfully: {}", userDTO.getUsername());
             return user;  // 密码匹配，返回用户信息
+        }else {
+            log.warn("Password mismatch for user: {}", userDTO.getUsername());
+            return null;  // 登录失败
         }
-        return null;  // 登录失败
     }
 
 
