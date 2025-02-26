@@ -20,6 +20,9 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.zip.GZIPInputStream;
 
 @Slf4j
@@ -112,8 +115,8 @@ public class WeatherServiceImpl implements WeatherService {
         return null;
     }
 
-    //获取数据库中最新的天气数据
-    @Override
+    //获取数据库中最新的天气数据1条
+    /*@Override
     public WeatherData getWeatherFromDatabase() {
         WeatherData latestWeather = weatherDataMapper.findLatestWeather();
         if (latestWeather != null) {
@@ -121,7 +124,37 @@ public class WeatherServiceImpl implements WeatherService {
         } else {
             log.error("No weather data found in the database.");
         }
-        return latestWeather;    }
+        return latestWeather;
+    }*/
+
+    //获取数据库中最新的天气数据5条
+    @Override
+    public List<WeatherData> getWeatherFromDatabase() {
+        List<WeatherData> latest5Weather = weatherDataMapper.find5LatestWeather();
+        List<WeatherData> filteredData = filterByTimeGap(latest5Weather);
+        if (!filteredData.isEmpty()) {
+            log.info("Latest weather data from database:{} " , filteredData);
+        } else {
+            log.error("No weather data found in the database.");
+        }
+        return filteredData;
+    }
+
+    private List<WeatherData> filterByTimeGap(List<WeatherData> latest5Weather) {
+        // 过滤掉时间差超过1小时的记录
+        List<WeatherData> finalData = new ArrayList<>();
+        LocalDateTime previousTime = null;
+
+        for (WeatherData data : latest5Weather) {
+            LocalDateTime currentTime = data.getObsTime();
+            if (previousTime == null || Duration.between(previousTime, currentTime).toHours() >= 0) {
+                finalData.add(data);
+                previousTime = currentTime;
+            }
+        }
+        log.info("Filtered weather data:{} " , finalData);
+        return finalData;
+    }
 
     @Override
     public boolean isDataExpired(WeatherData weatherData) {

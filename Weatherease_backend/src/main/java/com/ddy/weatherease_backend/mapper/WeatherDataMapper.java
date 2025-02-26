@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Mapper
 public interface WeatherDataMapper extends BaseMapper<WeatherData> {
@@ -16,4 +17,7 @@ public interface WeatherDataMapper extends BaseMapper<WeatherData> {
 
     @Select("SELECT * FROM weather_data ORDER BY obs_time DESC LIMIT 1")
     WeatherData findLatestWeather();
+
+    @Select("SELECT * FROM weather_data ORDER BY obs_time DESC LIMIT 5")
+    List<WeatherData> find5LatestWeather();
 }
