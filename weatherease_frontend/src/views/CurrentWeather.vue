@@ -7,6 +7,15 @@
         <TempChart :temperature="temperatures" :feelsLike="feelsLikes" :times="times" :location="location" />
         <div>{{feel}}</div>
       </div>
+      <!-- 风力图表 -->
+      <div style="border: 1px solid black; height: 300px; width:400px">
+        <WindChart
+            :windSpeed="windSpeed"
+            :windDirection="windDirection"
+            :windAngle="windAngle"
+            :windScale="windScale"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -14,11 +23,16 @@
 <script setup>
 import {ref, onMounted, computed} from 'vue';
 import TempChart from '@/components/TempChart.vue';
+import WindChart from '@/components/WindChart.vue';
 
 const temperatures = ref([]);  // 温度数据
 const feelsLikes = ref([]);    // 体感温度数据
 const times = ref([]);        // 时间数据
 const location = ref('');
+const windSpeed = ref(0);
+const windDirection = ref('');
+const windAngle = ref(0);
+const windScale = ref(0);
 const weather = ref([]);      // 完整天气数据
 
 // 在组件挂载时获取天气数据
@@ -47,6 +61,10 @@ const fetchWeatherData = async () => {
       feelsLikes.value = data.map(item => item.feelsLike).reverse();
       times.value = data.map(item => formatDate(item.obsTime)).reverse();
       location.value = data[0].location;
+      windSpeed.value = data[0].windSpeed;
+      windDirection.value = data[0].windDir;
+      windAngle.value = data[0].wind360;
+      windScale.value = data[0].windScale;
       weather.value = data;  // 将获取到的天气数据保存到weather变量中
     } else {
       console.error('无法获取天气数据');
