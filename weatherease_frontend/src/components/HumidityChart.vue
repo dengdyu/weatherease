@@ -3,7 +3,7 @@
     <div>
       <div ref="humidityChart" style="width: 380px; height: 200px; ">
       </div>
-      <div style="ont-size: 16px; display: flex; align-items: center;">
+      <div style="font-size: 16px; display: flex; align-items: center;">
         <p>露点: {{ dewPoint }} °C</p>
         <div>{{humifeel}}</div>
       </div>
