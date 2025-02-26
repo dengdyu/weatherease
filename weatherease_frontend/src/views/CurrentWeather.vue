@@ -16,6 +16,10 @@
             :windScale="windScale"
         />
       </div>
+      <!-- 湿度露点图表 -->
+      <div style="border: 1px solid black; height: 250px; width:400px">
+        <HumidityChart :humidities="humidities" :dewPoint="dewPoint" :times="times" />
+      </div>
     </div>
   </div>
 </template>
@@ -24,6 +28,7 @@
 import {ref, onMounted, computed} from 'vue';
 import TempChart from '@/components/TempChart.vue';
 import WindChart from '@/components/WindChart.vue';
+import HumidityChart from "@/components/HumidityChart.vue";
 
 const temperatures = ref([]);  // 温度数据
 const feelsLikes = ref([]);    // 体感温度数据
@@ -33,6 +38,8 @@ const windSpeed = ref(0);
 const windDirection = ref('');
 const windAngle = ref(0);
 const windScale = ref(0);
+const humidities = ref([]);
+const dewPoint = ref([]);
 const weather = ref([]);      // 完整天气数据
 
 // 在组件挂载时获取天气数据
@@ -65,7 +72,11 @@ const fetchWeatherData = async () => {
       windDirection.value = data[0].windDir;
       windAngle.value = data[0].wind360;
       windScale.value = data[0].windScale;
+      humidities.value = data.map(item => item.humidity).reverse();
+      dewPoint.value = data[0].dewPoint;
       weather.value = data;  // 将获取到的天气数据保存到weather变量中
+      console.log(humidities.value);
+      console.log(dewPoint.value);
     } else {
       console.error('无法获取天气数据');
     }
@@ -83,4 +94,5 @@ const feel = computed(() => {
     return '舒适';
   }
 });
+
 </script>
