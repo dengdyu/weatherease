@@ -29,11 +29,17 @@
             :times="times"
         />
       </div>
-      <div>
+      <div style="border: 1px solid black; height: 300px; width:400px">
         <WeatherDescription
             :description="description"
             :cloud="cloud"
             :visibility="visibility"
+        />
+      </div>
+      <div style="border: 1px solid black; height: 300px; width:400px">
+        <PrecipitationChart
+            :precipitation="precip"
+            :times="times"
         />
       </div>
     </div>
@@ -46,6 +52,7 @@ import TempChart from '@/components/TempChart.vue';
 import WindChart from '@/components/WindChart.vue';
 import HumidityChart from "@/components/HumidityChart.vue";
 import WeatherDescription from "@/components/WeatherDescription.vue";
+import PrecipitationChart from "@/components/PrecipitationChart.vue";
 
 const temperatures = ref([]);  // 温度数据
 const feelsLikes = ref([]);    // 体感温度数据
@@ -60,6 +67,7 @@ const dewPoint = ref([]);
 const description = ref('');
 const cloud = ref(0);
 const visibility = ref(0);
+const precip = ref([]);
 const weather = ref([]);      // 完整天气数据
 
 // 在组件挂载时获取天气数据
@@ -97,6 +105,7 @@ const fetchWeatherData = async () => {
       description.value = data[0].weatherDescription;
       cloud.value = data[0].cloud;
       visibility.value = data[0].visibility;
+      precip.value = data.map(item => item.precip).reverse();
       weather.value = data;  // 将获取到的天气数据保存到weather变量中
       console.log(description.value);
     } else {
