@@ -17,8 +17,6 @@ const props = defineProps({
   times: Array,
   location: String,
 });
-console.log('温度:', props.temperature);
-console.log('位置:', props.location);
 
 onMounted(() => {
   const myChart = echarts.init(temperatureChart.value);

@@ -17,15 +17,15 @@
 import { ref, onMounted, watch } from 'vue';
 import * as echarts from 'echarts';
 
-// 接收来自父组件的数据
+//接收来自父组件的数据
 const props = defineProps({
-  windSpeed: Number,  // 风速
-  windDirection: String,  // 风向文字
-  windAngle: Number,  // 风向角度
-  windScale: Number  // 风力
+  windSpeed: Number,  //风速
+  windDirection: String,  //风向文字
+  windAngle: Number,  //风向角度
+  windScale: Number  //风力
 });
 
-// 获取风速和风向数据
+//获取风速和风向数据
 const windSpeed = ref(props.windSpeed);
 const windScale = ref(props.windScale);
 const windDirection = ref(props.windDirection);
@@ -33,7 +33,7 @@ const windAngle = ref(props.windAngle);
 
 const windChart = ref(null);
 
-// 初始化图表
+//初始化图表
 onMounted(() => {
   initWindChart();
 });
@@ -55,8 +55,8 @@ const initWindChart = () => {
         min: 0,
         max: 360,
         splitNumber: 8,
-        startAngle: 90,  // 起始角度调整为 90 度（北）
-        endAngle: 450,   // 结束角度调整为 450 度
+        startAngle: 90,  //起始角度调整为90度
+        endAngle: 450,   //结束角度调整为450度
         pointer: {
           length: '50%',
           width: 6

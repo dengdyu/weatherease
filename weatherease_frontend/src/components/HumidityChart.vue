@@ -22,8 +22,6 @@ const props = defineProps({
   dewPoint: Number,
   times: Array,
 });
-console.log('湿度:', props.humidities);
-console.log('露点:', props.dewPoint);
 
 onMounted(() => {
   const myChart = echarts.init(humidityChart.value);
