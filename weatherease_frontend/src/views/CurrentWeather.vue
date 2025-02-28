@@ -29,6 +29,7 @@
             :times="times"
         />
       </div>
+      <!-- 天气描述 -->
       <div style="border: 1px solid black; height: 300px; width:400px">
         <WeatherDescription
             :description="description"
@@ -36,9 +37,17 @@
             :visibility="visibility"
         />
       </div>
+      <!-- 降水柱状图 -->
       <div style="border: 1px solid black; height: 300px; width:400px">
         <PrecipitationChart
             :precipitation="precip"
+            :times="times"
+        />
+      </div>
+      <!-- 气压变化折线图 -->
+      <div style="border: 1px solid black; height: 300px; width:400px">
+        <PressureChart
+            :pressure="pressure"
             :times="times"
         />
       </div>
@@ -53,6 +62,7 @@ import WindChart from '@/components/WindChart.vue';
 import HumidityChart from "@/components/HumidityChart.vue";
 import WeatherDescription from "@/components/WeatherDescription.vue";
 import PrecipitationChart from "@/components/PrecipitationChart.vue";
+import PressureChart from "@/components/PressureChart.vue";
 
 const temperatures = ref([]);  // 温度数据
 const feelsLikes = ref([]);    // 体感温度数据
@@ -68,7 +78,8 @@ const description = ref('');
 const cloud = ref(0);
 const visibility = ref(0);
 const precip = ref([]);
-const weather = ref([]);      // 完整天气数据
+const pressure = ref([]);
+const weather = ref([]);      //完整天气数据
 
 // 在组件挂载时获取天气数据
 onMounted(() => {
@@ -88,7 +99,7 @@ const formatDate = (dateStr) => {
 // 获取天气数据的函数
 const fetchWeatherData = async () => {
   try {
-    const response = await fetch('http://localhost:8080/weather/now');  // 请求后端获取默认位置的天气数据
+    const response = await fetch('http://localhost:8080/weather/now');  //请求后端获取默认位置的天气数据
     if (response.ok) {
       const data = await response.json();
       // 提取温度和体感温度
@@ -106,6 +117,7 @@ const fetchWeatherData = async () => {
       cloud.value = data[0].cloud;
       visibility.value = data[0].visibility;
       precip.value = data.map(item => item.precip).reverse();
+      pressure.value = data.map(item => item.pressure).reverse();
       weather.value = data;  // 将获取到的天气数据保存到weather变量中
       console.log(description.value);
     } else {
